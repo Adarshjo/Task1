@@ -1,0 +1,98 @@
+import re
+File_path="C:\\Users\\adars\\Desktop\\hero.txt"
+
+def login():
+    while(True):
+        print("1.Register User")
+        print("2.login")
+        print("3.Forgot password")
+        choice=int(input("Enter your choice:"))
+        if choice==1:
+            print("user registrationn")
+            register_user()
+        elif choice==2:
+            print("login options")
+            login_username()
+        elif choice==3:
+          username = input("Please enter your username")
+          get_password(username)
+        else:
+            quit()
+
+
+def create_user_list():
+    user_list={}
+    for line in open(File_path,"r").readlines(): 
+       login_info = line.split(" ") 
+       user_list[login_info[0]]=(login_info[1].strip('\n'))
+    return user_list
+def get_password(username):
+    user_list=create_user_list()
+    if(user_list.__contains__(username)):
+        print("Your password is",user_list[username])
+    else:
+        print("User doesnt exist first register")
+    
+    
+        
+def login_username():
+    complete=False
+    user_list=create_user_list()
+    while not complete:
+        username = input("Please enter your username")
+        if(user_list.__contains__(username)):
+            completed=False
+            print("user exist")
+            while not completed:
+                password = input("Please enter your password")
+                if user_list[username]==password:
+                    
+                     print("user logged in successfully")
+                     complete = True
+                     completed=True
+                else:
+                    print("Incorrect password")
+        else:
+            print("user not available please register first and then login")
+            register_user()
+   
+    
+
+def validate_username(username):
+    regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+    return re.fullmatch(regex, username)
+        
+def validate_password(password):
+    regex =reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{5,16}$"
+    return re.fullmatch(regex, password)
+
+def register_user():
+    complete=False
+    while not complete:
+        username = input("What is the username?")
+        if validate_username(username):
+            print("email validated")
+            completed=False
+            while not completed:
+                password = input("What is the password?")
+                if validate_password(password):
+                     write_to_file(username,password)
+                     print("user registerd successfully")
+                     complete = True
+                     completed=True
+                else:
+                    print("please enter the password in correct format")
+        else:
+            print("please enter the usernmae in correct format")
+            
+        
+def write_to_file(username,password):
+    file = open(File_path,'a')
+    file.write(username)
+    file.write(" ")
+    file.write(password)
+    file.write("\n")
+    file.close()
+    return True
+    
+login()
